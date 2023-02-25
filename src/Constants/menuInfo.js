@@ -24,6 +24,11 @@ export const menu = [
     },
 ]
 
+/**
+ * 
+ * @param {*} param 导航栏对象数组 
+ * @returns antd指定的格式对象数组
+ */
 export const result = (param) => {
 
     let resultArray = []
@@ -51,6 +56,43 @@ export const result = (param) => {
 
 
     return resultArray
+}
+
+/**
+ * 
+ * @param {*} menu  导航栏对象数组
+ * @param {*} pathName  需要匹配的路径字符串
+ * @returns  路径对应的key的数组
+ */
+export const getKeyByPathName = (menu, pathName) => {
+    for (let index = 0; index < menu.length; index++) {
+        const value = menu[index];
+        if (value.children) {
+            const valueResult = getKeyByPathName(value.children, pathName)
+            if (valueResult) {
+                return valueResult
+            }
+        }
+        if (value.path === pathName) {
+            return Array.from(value.key)
+        }
+    }
+    return []
+}
+
+
+/**
+ * 
+ * @returns 获取打开的key
+ */
+export const getOpenKeys = () => {
+    let result = []
+    menu.forEach((item) => {
+        if (item.children) {
+            result.push(item.key)
+        }
+    })
+    return result
 }
 
 

@@ -1,13 +1,21 @@
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { result, menu } from '../../Constants/menuInfo';
+import { result, menu, getKeyByPathName, getOpenKeys } from '../../Constants/menuInfo';
 
 const { Sider } = Layout;
 
 export default function NavLeft() {
 
     const [collapsed, setCollapsed] = useState(false);
+    const [selectKeys, setSelectKeys] = useState([]);
+
+    let location = useLocation();
+
+    useEffect(() => {
+        let keyArray = getKeyByPathName(menu, location.pathname);
+        setSelectKeys(keyArray || ['1'])
+    }, [])
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -19,7 +27,8 @@ export default function NavLeft() {
                         background: 'rgba(255, 255, 255, 0.2)',
                     }}
                 />
-                <Menu theme="dark" selectedKeys={['1']} mode="inline" items={result(menu)} />
+                <Menu theme="dark" onSelect={({ key }) => { setSelectKeys([key]) }} selectedKeys={selectKeys}
+                    openKeys={getOpenKeys()} mode="inline" items={result(menu)} />
             </Sider>
             <Outlet />
         </Layout>

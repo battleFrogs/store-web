@@ -18,27 +18,31 @@ export default function Student() {
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
+      editable: true,
     },
     {
       title: '年龄',
       dataIndex: 'age',
       key: 'age',
+      editable: true,
     },
     {
       title: '学号',
       dataIndex: 'number',
       key: 'number',
+      editable: true,
     },
     {
       title: '班级',
       dataIndex: 'className',
       key: 'className',
+      editable: true,
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button type='primary'>
+        <Button type='primary' onClick={() => deleteById(record.id)}>
           删除
         </Button>
       ),
@@ -78,7 +82,6 @@ export default function Student() {
 
   // 新增数据
   const insert = async () => {
-    alert("sdf")
     await form1.validateFields()
     const data = form1.getFieldsValue()
     console.log(data)
@@ -89,6 +92,14 @@ export default function Student() {
       request.postJson("/student/getPageList", param, {}).then((res) => setDataSource(res.records))
     }
   }
+
+  // 删除数据
+  const deleteById = (id) => {
+    const param = { pageIndex: 1, pageSize: 10 }
+    request.get("/student/deleteById", { id }).then((res) => request.postJson("/student/getPageList", param, {}).then((res) => setDataSource(res.records)))
+  }
+
+
 
   return (
     <Layout className="site-layout">
