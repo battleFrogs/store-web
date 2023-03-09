@@ -1,10 +1,21 @@
+import { notification } from "antd";
 import axios from "axios";
 const service = axios.create({
     timeout: 40000,
+    url: "http://localhost:8080"
     // headers: { "Content-Type": "application/x-www-form-urlencoded" },
 });
 
-const urlprefix = "http://localhost:8080"
+// 对处理结果业务的统一处理
+function responseResult(res, resolve) {
+    const { code, msg } = res.data
+    if (code !== 200) {
+        notification.error({ placement: "topRight", message: "请求错误", description: msg })
+        return;
+    }
+    resolve(res.data.data)
+}
+
 
 export default {
     // get请求
@@ -12,13 +23,10 @@ export default {
         return new Promise((resolve, reject) => {
             service({
                 method: "GET",
-                url: urlprefix + url,
-                params: param,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                },
+                url,
+                params: param
             }).then(res => {
-                resolve(res.data)
+                responseResult(res, resolve)
             }).catch(err => {
                 reject(err)
             })
@@ -31,14 +39,13 @@ export default {
             service({
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/json"
                 },
                 params: param,
-                url: urlprefix + url,
+                url: url,
                 data
             }).then(res => {
-                resolve(res.data)
+                responseResult(res, resolve)
             }).catch(err => {
                 reject(err)
             })
