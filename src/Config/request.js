@@ -9,7 +9,7 @@ const service = axios.create({
 // 对处理结果业务的统一处理
 function responseResult(res, resolve, reject) {
     const { code, msg } = res.data
-    if (code !== 20) {
+    if (code !== 200) {
         notification.error({ placement: "topRight", message: "请求错误", description: msg })
         reject(msg)
         return;

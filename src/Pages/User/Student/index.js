@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../../../Components/Footer';
 import Header from '../../../Components/Header';
 import request from '../../../Config/request';
+import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/Student/studentApi';
 
 
 const { Content } = Layout;
@@ -114,7 +115,7 @@ export default function Student() {
       Object.entries(data)
         .filter(([key, value]) => value)
     );
-    request.postJson("/student/getPageList", { pageIndex: pageIndexParam, pageSize: 10 }, filteredObj)
+    request.postJson(getPageStudentUrl, { pageIndex: pageIndexParam, pageSize: 10 }, filteredObj)
       .then((res) => { setDataSource(res.records); setPageSizeTotal(res.total) })
   }
 
@@ -180,7 +181,7 @@ export default function Student() {
   const save = async (key) => {
     try {
       await formTable.validateFields()
-      await request.postJson("/student/updateStudent", { id: key }, formTable.getFieldsValue())
+      await request.postJson(updateStudentUrl, { id: key }, formTable.getFieldsValue())
       getTableList(pageIndex)
       setEditingKey('');
     } catch (errInfo) {
@@ -207,7 +208,7 @@ export default function Student() {
     const data = formInsert.getFieldsValue()
     console.log(data)
     if (data['name'] && data['age'] && data['number'] && data['className']) {
-      await request.postJson("/student/save", {}, data)
+      await request.postJson(insertStudentUrl, {}, data)
       setIsModalOpen(false)
       getTableList(pageIndex)
     }
@@ -215,7 +216,7 @@ export default function Student() {
 
   // 删除数据
   const deleteById = (id) => {
-    request.get("/student/deleteById", { id }).then((res) => getTableList(pageIndex))
+    request.get(deleteOneStudentUrl, { id }).then((res) => getTableList(pageIndex))
   }
 
 
