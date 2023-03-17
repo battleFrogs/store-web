@@ -1,0 +1,15 @@
+.background {
+    background-color: #eaeaea;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.window {
+    background-color: white;
+    border: 1px solid black;
+    width: 600px;
+    height: 400px;
+    border-radius: 15px;
+}

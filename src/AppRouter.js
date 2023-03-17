@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavLeft from './Components/NavLeft';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
+import Register from './Pages/Register';
 import Student from './Pages/User/Student';
 
 export default function AppRouter() {
@@ -10,6 +11,7 @@ export default function AppRouter() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<Login />} />
+                <Route path='register' element={<Register />} />
                 <Route path='page' element={<NavLeft />} >
                     <Route path='home' element={<Home />} />
                 </Route>
