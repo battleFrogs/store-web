@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../../../Components/Footer';
 import Header from '../../../Components/Header';
 import request from '../../../Config/request';
-import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/Student/studentApi';
+import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/studentApi';
 
 
 const { Content } = Layout;
@@ -116,7 +116,7 @@ export default function Student() {
         .filter(([key, value]) => value)
     );
     request.postJson(getPageStudentUrl, { pageIndex: pageIndexParam, pageSize: 10 }, filteredObj)
-      .then((res) => { setDataSource(res.records); setPageSizeTotal(res.total) })
+      .then((res) => { setDataSource(res.students); setPageSizeTotal(res.total) })
   }
 
   // 修改分页数据

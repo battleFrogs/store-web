@@ -6,6 +6,19 @@ const service = axios.create({
     // headers: { "Content-Type": "application/x-www-form-urlencoded" },
 });
 
+
+// 添加请求前拦截器
+service.interceptors.request.use(config => {
+    if (sessionStorage.getItem("token")) {
+        console.log(sessionStorage.getItem("token"))
+        config.headers['Authorization'] = sessionStorage.getItem("token")
+    }
+    return config
+}, function (error) {
+    return Promise.reject(error)
+});
+
+
 // 对处理结果业务的统一处理
 function responseResult(res, resolve, reject) {
     const { code, msg } = res.data
