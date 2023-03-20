@@ -99,6 +99,9 @@ export default function Register() {
                             <Button type="primary" htmlType="submit">
                                 确定注册
                             </Button>
+                            <Button type="default" onClick={()=>{navigate("/")}}>
+                                返回登录
+                            </Button>
                         </Space>
                     </Form.Item>
                 </Form>
