@@ -18,7 +18,13 @@ export const menu = [
             key: "3",
             path: "/user/student",
             labelName: "学生列表",
-        }],
+        },
+        {
+            key: "4",
+            path: "/user/operate",
+            labelName: "操作者信息",
+        },
+        ],
         labelName: '用户操作',
 
     },

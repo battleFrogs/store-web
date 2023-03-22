@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../../../Components/Footer';
 import Header from '../../../Components/Header';
 import request from '../../../Config/request';
-import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/studentApi';
+import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/StudentApi';
 
 
 const { Content } = Layout;

@@ -1,14 +1,18 @@
 
 
 
-import { Layout, theme, Breadcrumb } from 'antd'
-import React from 'react'
+import { Layout, theme, Breadcrumb, Upload } from 'antd'
+import React, { useState } from 'react'
 import Footer from '../../Components/Footer';
 import Header from '../../Components/Header';
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 
 export default function Home() {
+
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
 
     const { token: { colorBgContainer } } = theme.useToken();
 

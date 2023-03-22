@@ -4,6 +4,7 @@ import NavLeft from './Components/NavLeft';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Operate from './Pages/User/Operate';
 import Student from './Pages/User/Student';
 
 export default function AppRouter() {
@@ -17,6 +18,7 @@ export default function AppRouter() {
                 </Route>
                 <Route path='user' element={<NavLeft />}>
                     <Route path='student' element={<Student />} />
+                    <Route path='operate' element={<Operate />} />
                 </Route>
             </Routes>
         </BrowserRouter>

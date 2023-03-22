@@ -1,0 +1,1 @@
+export const uploadUrl = "/file/upload"
