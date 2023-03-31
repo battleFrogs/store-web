@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import axios from "axios";
+import history from "./history";
 const service = axios.create({
     timeout: 40000,
     baseURL: "http://localhost:8080"
@@ -20,8 +21,12 @@ service.interceptors.request.use(config => {
 
 
 // 对处理结果业务的统一处理
-function responseResult(res, resolve, reject) {
+function useResponseResult(res, resolve, reject) {
     const { code, msg } = res.data
+    if (code === 401) {
+        history.push('/')
+        return
+    }
     if (code !== 200) {
         notification.error({ placement: "topRight", message: "请求错误", description: msg })
         reject(msg)
@@ -40,7 +45,7 @@ export default {
                 url,
                 params: param
             }).then(res => {
-                responseResult(res, resolve, reject)
+                useResponseResult(res, resolve, reject)
             }).catch(err => {
                 reject(err.message)
             })
@@ -59,7 +64,7 @@ export default {
                 url: url,
                 data
             }).then(res => {
-                responseResult(res, resolve, reject)
+                useResponseResult(res, resolve, reject)
             }).catch(err => {
                 reject(err)
             })

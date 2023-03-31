@@ -24,6 +24,12 @@ export const menu = [
             path: "/user/operate",
             labelName: "操作者信息",
         },
+        {
+            key: "5",
+            path: "/user/classes",
+            labelName: "班级信息",
+        },
+
         ],
         labelName: '用户操作',
 

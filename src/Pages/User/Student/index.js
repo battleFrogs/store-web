@@ -1,10 +1,11 @@
-import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination } from 'antd';
+import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 
 import Footer from '../../../Components/Footer';
 import Header from '../../../Components/Header';
 import request from '../../../Config/request';
+import { getClassesList } from '../../../Requests/ClassesApi';
 import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/StudentApi';
 
 
@@ -38,10 +39,13 @@ export default function Student() {
     },
     {
       title: '班级',
-      dataIndex: 'className',
-      key: 'className',
+      dataIndex: 'classId',
+      key: 'classId',
       width: '20%',
       editable: true,
+      render: (_, record) => {
+        return record.className
+      }
     },
     {
       title: 'Action',
@@ -58,7 +62,7 @@ export default function Student() {
             >
               保存
             </Button>
-            <Popconfirm title="Sure to cancel?" onConfirm={() => setEditingKey('')}>
+            <Popconfirm title="确定取消嘛" onConfirm={() => setEditingKey('')}>
               <Button>取消</Button>
             </Popconfirm>
           </span>
@@ -83,13 +87,22 @@ export default function Student() {
     }
     return {
       ...col,
-      onCell: (record) => ({
-        record,
-        inputType: col.dataIndex === 'age' || col.dataIndex === 'number' ? 'number' : 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
+      onCell: (record) => {
+        let inputType = "text";
+        if (col.dataIndex === 'age' || col.dataIndex === 'number') {
+          inputType = 'number'
+        }
+        if (col.dataIndex === 'classId') {
+          inputType = "select"
+        }
+        return {
+          record,
+          inputType,
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: isEditing(record),
+        }
+      },
     };
   });
 
@@ -106,6 +119,7 @@ export default function Student() {
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSizeTotal, setPageSizeTotal] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [classOptions, setClassOptions] = useState([])
 
   // 获取列表详情数据
   const getTableList = async (pageIndexParam) => {
@@ -127,6 +141,14 @@ export default function Student() {
 
   useEffect(() => {
     getTableList(pageIndex)
+    request.get(getClassesList, {}).then((res) => {
+      if (res.length > 0) {
+        const resObj = res.map((item) => {
+          return { label: item.className, value: item.id }
+        })
+        setClassOptions(resObj)
+      }
+    })
   }, [])
 
   // 展示表格那行是否可编辑的状态
@@ -153,7 +175,14 @@ export default function Student() {
     children,
     ...restProps
   }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+
+    let inputNode = <Input />;
+    if (inputType === 'number') {
+      inputNode = <InputNumber />
+    }
+    if (inputType === 'select') {
+      inputNode = <Select options={classOptions} />
+    }
     return (
       <td {...restProps}>
         {editing ? (
@@ -180,6 +209,7 @@ export default function Student() {
   // 修改该行的修改内容
   const save = async (key) => {
     try {
+      console.log(formTable.getFieldsValue())
       await formTable.validateFields()
       await request.postJson(updateStudentUrl, { id: key }, formTable.getFieldsValue())
       getTableList(pageIndex)
@@ -207,7 +237,7 @@ export default function Student() {
     await formInsert.validateFields()
     const data = formInsert.getFieldsValue()
     console.log(data)
-    if (data['name'] && data['age'] && data['number'] && data['className']) {
+    if (data['name'] && data['age'] && data['number'] && data['classId']) {
       await request.postJson(insertStudentUrl, {}, data)
       setIsModalOpen(false)
       getTableList(pageIndex)
@@ -287,8 +317,8 @@ export default function Student() {
               <Form.Item name="number" label="学号" rules={[{ required: true, message: "学号不能为空" }]}>
                 <InputNumber />
               </Form.Item>
-              <Form.Item name="className" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
-                <Input />
+              <Form.Item name="classId" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
+                <Select options={classOptions}></Select>
               </Form.Item>
               <div style={{ textAlign: 'center' }}>
                 <Button type='primary' onClick={insert}>确定新增</Button>

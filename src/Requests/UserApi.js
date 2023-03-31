@@ -5,3 +5,5 @@ export const registerUrl = "/user/register"
 export const getSystemUserInfoUrl = "/user/getSystemUserInfo"
 
 export const updateSystemUserInfoUrl = "/user/updateSystemUserInfo"
+
+export const logoutUrl = "/user/logout"

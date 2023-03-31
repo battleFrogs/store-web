@@ -3,6 +3,7 @@ import { Breadcrumb, Button, Form, Input, Layout, Select, theme, Upload } from '
 import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import Header from '../../../Components/Header/index';
+import Footer from '../../../Components/Footer';
 import request from '../../../Config/request';
 import { getSystemUserInfoUrl, updateSystemUserInfoUrl } from '../../../Requests/UserApi';
 
@@ -126,6 +127,7 @@ export default function Operate() {
                     </Form>
                 </div>
             </Content>
+            <Footer />
         </Layout >
     )
 }
