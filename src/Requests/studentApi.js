@@ -9,6 +9,10 @@ export const deleteOneStudentUrl = "/student/deleteById"
 
 export const updateStudentUrl = "/student/updateStudent"
 
+export const exportExcelStudentUrl = "/student/exportExcelStudent"
+
+export const importExcelStudentUrl = "/student/importExcelStudent"
+
 
 
 

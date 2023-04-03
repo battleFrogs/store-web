@@ -1,12 +1,12 @@
-import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination, Select } from 'antd';
+import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination, Select, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 
 import Footer from '../../../Components/Footer';
 import Header from '../../../Components/Header';
-import request from '../../../Config/request';
+import request, { baseURL } from '../../../Config/request';
 import { getClassesList } from '../../../Requests/ClassesApi';
-import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/StudentApi';
+import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl, exportExcelStudentUrl, importExcelStudentUrl } from '../../../Requests/StudentApi';
 
 
 const { Content } = Layout;
@@ -249,6 +249,15 @@ export default function Student() {
     request.get(deleteOneStudentUrl, { id }).then((res) => getTableList(pageIndex))
   }
 
+  // 导出
+  const exportExcel = () => {
+    let data = form.getFieldsValue()
+    const filteredObj = Object.fromEntries(
+      Object.entries(data)
+        .filter(([_, value]) => value)
+    );
+    request.postExport(exportExcelStudentUrl, { pageIndex, pageSize: 10 }, filteredObj)
+  }
 
 
   return (
@@ -284,6 +293,8 @@ export default function Student() {
               <Button type="primary" onClick={() => submit()}>查询</Button>
               <Button type="dashed" onClick={() => clear()}>清空</Button>
               <Button type="primary" onClick={() => setIsModalOpen(true)}>新增</Button>
+              <Button type="dashed" onClick={() => exportExcel()}>导出</Button>
+              <Upload action={baseURL + importExcelStudentUrl} fileList={null} headers={{ 'Authorization': sessionStorage.getItem("token") }}><Button type="primary" >导入</Button></Upload>
             </Space>
           </Form>
           <div style={{ marginTop: 30 }}></div>
