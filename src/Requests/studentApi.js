@@ -13,6 +13,9 @@ export const exportExcelStudentUrl = "/student/exportExcelStudent"
 
 export const importExcelStudentUrl = "/student/importExcelStudent"
 
+export const getStudentTotalUrl = "/student/getStudentTotal"
+
+export const getRecentStudentAddNumUrl = "/student/getRecentStudentAddNum"
 
 
 
