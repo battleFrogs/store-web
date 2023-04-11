@@ -8,6 +8,7 @@ import Register from './Pages/Register';
 import Operate from './Pages/User/Operate';
 import Student from './Pages/User/Student';
 import Classes from './Pages/User/Classes';
+import Teacher from './Pages/User/Teacher';
 
 export default function AppRouter() {
     return (
@@ -22,6 +23,7 @@ export default function AppRouter() {
                     <Route path='student' element={<Student />} />
                     <Route path='operate' element={<Operate />} />
                     <Route path='classes' element={<Classes />} />
+                    <Route path='teacher' element={<Teacher />} />
                 </Route>
             </Routes>
         </HistoryRouter>
