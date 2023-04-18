@@ -9,6 +9,7 @@ import Operate from './Pages/User/Operate';
 import Student from './Pages/User/Student';
 import Classes from './Pages/User/Classes';
 import Teacher from './Pages/User/Teacher';
+import NoAllow from './Pages/NoAllow';
 
 export default function AppRouter() {
     return (
@@ -25,6 +26,7 @@ export default function AppRouter() {
                     <Route path='classes' element={<Classes />} />
                     <Route path='teacher' element={<Teacher />} />
                 </Route>
+                <Route path='noAllow' element={<NoAllow />} />
             </Routes>
         </HistoryRouter>
     )

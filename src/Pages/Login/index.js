@@ -3,7 +3,7 @@ import React from 'react'
 import { Button, Checkbox, Form, Input, Space } from 'antd';
 import './index.css'
 import request from '../../Config/request';
-import { loginUrl } from "../../Requests/UserApi"
+import { getSystemUserInfoUrl, loginUrl } from "../../Requests/UserApi"
 import { useNavigate } from 'react-router-dom';
 export default function Login() {
 
@@ -14,7 +14,10 @@ export default function Login() {
         request.postJson(loginUrl, {}, values).then((res) => {
             // 存储token信息
             sessionStorage.setItem("token", res)
-            navigate("/page/home");
+            request.postJson(getSystemUserInfoUrl, {}, {}).then((res) => {
+                sessionStorage.setItem("identity", res.identity)
+                navigate("/page/home");
+            })
         })
     };
 

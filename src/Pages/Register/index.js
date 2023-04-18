@@ -7,7 +7,7 @@ import { registerUrl } from "../../Requests/UserApi"
 import { useNavigate } from 'react-router-dom';
 export default function Register() {
 
-
+    const options = [{ label: "学生", value: "student" }, { label: "老师", value: "teacher" }, { label: "管理员", value: "super" }]
     let navigate = useNavigate();
 
     const onFinish = (values) => {
@@ -15,13 +15,10 @@ export default function Register() {
             // 存储token信息
             navigate("/");
         })
+        console.log(values)
     };
 
-
     return (
-
-
-
         <div className='background'>
             <div className='window'>
                 <Form
@@ -93,7 +90,7 @@ export default function Register() {
                         label="身份"
                         required={true}
                     >
-                        <Select options={[{ label: "学生", value: "student" }, { label: "老师", value: "teacher" }]}></Select>
+                        <Select options={options}></Select>
                     </Form.Item>
 
                     <Form.Item
