@@ -14,14 +14,7 @@ export default function Teacher() {
 
     useEffect(() => {
         getTeacherData();
-        request.get(getClassesList, {}).then((res) => {
-            if (res.length > 0) {
-                const resObj = res.map((item) => {
-                    return { label: item.className, value: item.id }
-                })
-                setClassOptions(resObj)
-            }
-        })
+        getClassData();
     }, [])
 
     const [editingKey, setEditingKey] = useState('');
@@ -33,15 +26,16 @@ export default function Teacher() {
     const [formInsert] = Form.useForm();
 
 
-    const isEditing = (record) => record.teacherId === editingKey;
+    const isEditing = (record) => record.id === editingKey;
+    // 编辑时内容回显
     const edit = (record) => {
         formTable.setFieldsValue({
             ...record,
             classId: record.classesResults.map(res => res.classId)
         })
-        setEditingKey(record.teacherId);
+        setEditingKey(record.id);
     }
-    // 编辑
+    // 更新数据
     const save = async (key) => {
         await formTable.validateFields()
         let data = formTable.getFieldsValue()
@@ -54,6 +48,7 @@ export default function Teacher() {
         request.get(teacherDelete, { id })
         getTeacherData();
     }
+    // 保存数据
     const insert = async () => {
         let data = formInsert.getFieldsValue()
         await request.postJson(teacherInsert, {}, data)
@@ -104,8 +99,22 @@ export default function Teacher() {
         }
     ];
 
+    function getClassData() {
+        request.get(getClassesList, {}).then((res) => {
+            if (res.length > 0) {
+                const resObj = res.map((item) => {
+                    return { label: item.className, value: item.id };
+                });
+                setClassOptions(resObj);
+            }
+        });
+    }
+
     function getTeacherData() {
         request.postJson(getTeacherPageList, { pageIndex: 1, pageSize: 10 }, {}).then(res => {
+            res.pageTeacherResults.forEach(element => {
+                element['id'] = element.teacherId
+            });
             setDataSource(res.pageTeacherResults);
         });
     }
@@ -115,7 +124,7 @@ export default function Teacher() {
             <Button onClick={() => edit(record)}>
                 编辑
             </Button>
-            <Button type='primary' onClick={() => deleteById(record.teacherId)}>
+            <Button type='primary' onClick={() => deleteById(record.id)}>
                 删除
             </Button>
         </Space>;
@@ -124,7 +133,7 @@ export default function Teacher() {
     function showTableAction(record) {
         return <span>
             <Button
-                onClick={() => save(record.teacherId)}
+                onClick={() => save(record.id)}
                 style={{
                     marginRight: 8,
                 }}

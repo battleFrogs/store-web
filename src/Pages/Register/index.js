@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button, Checkbox, Form, Input, Space } from 'antd';
+import { Button, Checkbox, Form, Input, Select, Space } from 'antd';
 import './index.css'
 import request from '../../Config/request';
 import { registerUrl } from "../../Requests/UserApi"
@@ -88,6 +88,13 @@ export default function Register() {
                     >
                         <Input.Password />
                     </Form.Item>
+                    <Form.Item
+                        name="identity"
+                        label="身份"
+                        required={true}
+                    >
+                        <Select options={[{ label: "学生", value: "student" }, { label: "老师", value: "teacher" }]}></Select>
+                    </Form.Item>
 
                     <Form.Item
                         wrapperCol={{
@@ -99,7 +106,7 @@ export default function Register() {
                             <Button type="primary" htmlType="submit">
                                 确定注册
                             </Button>
-                            <Button type="default" onClick={()=>{navigate("/")}}>
+                            <Button type="default" onClick={() => { navigate("/") }}>
                                 返回登录
                             </Button>
                         </Space>

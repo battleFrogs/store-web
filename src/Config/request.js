@@ -1,7 +1,7 @@
 import { notification } from "antd";
 import axios from "axios";
 import history from "./history";
-export const baseURL = "http://localhost:8080"
+export const baseURL = "http://localhost:8081"
 
 const service = axios.create({
     timeout: 40000,

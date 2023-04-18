@@ -7,12 +7,33 @@ import Header from '../../../Components/Header';
 import request, { baseURL } from '../../../Config/request';
 import { getClassesList } from '../../../Requests/ClassesApi';
 import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl, exportExcelStudentUrl, importExcelStudentUrl } from '../../../Requests/StudentApi';
+import EditTable from '../../../Components/EditTable/EditTable';
 
 
 const { Content } = Layout;
 
 
 export default function Student() {
+
+
+  const { token: { colorBgContainer } } = theme.useToken();
+  // 表格数据
+  const [dataSource, setDataSource] = useState([])
+  const [editingKey, setEditingKey] = useState('');
+
+  const [form] = Form.useForm();
+  const [formInsert] = Form.useForm();
+  const [formTable] = Form.useForm();
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSizeTotal, setPageSizeTotal] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [classOptions, setClassOptions] = useState([])
+
+
+  useEffect(() => {
+    getTableList(pageIndex)
+    getClassData();
+  }, [])
 
   // 表格字段内容
   const columns = [
@@ -21,6 +42,7 @@ export default function Student() {
       dataIndex: 'name',
       key: 'name',
       width: '20%',
+      inputType: <Input></Input>,
       editable: true,
     },
     {
@@ -28,6 +50,7 @@ export default function Student() {
       dataIndex: 'age',
       key: 'age',
       width: '20%',
+      inputType: <InputNumber></InputNumber>,
       editable: true,
     },
     {
@@ -35,6 +58,7 @@ export default function Student() {
       dataIndex: 'number',
       key: 'number',
       width: '20%',
+      inputType: <InputNumber></InputNumber>,
       editable: true,
     },
     {
@@ -43,6 +67,7 @@ export default function Student() {
       key: 'classId',
       width: '20%',
       editable: true,
+      inputType: <Select options={classOptions} />,
       render: (_, record) => {
         return record.className
       }
@@ -80,57 +105,29 @@ export default function Student() {
     },
   ];
 
-  // 对行的单元格设置编辑属性
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record) => {
-        let inputType = "text";
-        if (col.dataIndex === 'age' || col.dataIndex === 'number') {
-          inputType = 'number'
-        }
-        if (col.dataIndex === 'classId') {
-          inputType = "select"
-        }
-        return {
-          record,
-          inputType,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: isEditing(record),
-        }
-      },
-    };
-  });
-
-
-  // 表格数据
-  const [dataSource, setDataSource] = useState([])
-
-  const { token: { colorBgContainer } } = theme.useToken();
-  const [editingKey, setEditingKey] = useState('');
-
-  const [form] = Form.useForm();
-  const [formInsert] = Form.useForm();
-  const [formTable] = Form.useForm();
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSizeTotal, setPageSizeTotal] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [classOptions, setClassOptions] = useState([])
-
   // 获取列表详情数据
-  const getTableList = async (pageIndexParam) => {
+  const getTableList = (pageIndexParam) => {
     let data = form.getFieldsValue()
     console.log(data)
     const filteredObj = Object.fromEntries(
       Object.entries(data)
-        .filter(([key, value]) => value)
+        .filter(([_, value]) => value)
     );
     request.postJson(getPageStudentUrl, { pageIndex: pageIndexParam, pageSize: 10 }, filteredObj)
       .then((res) => { setDataSource(res.students); setPageSizeTotal(res.total) })
+  }
+
+
+  // 获取班级信息
+  const getClassData = () => {
+    request.get(getClassesList, {}).then((res) => {
+      if (res.length > 0) {
+        const resObj = res.map((item) => {
+          return { label: item.className, value: item.id };
+        });
+        setClassOptions(resObj);
+      }
+    });
   }
 
   // 修改分页数据
@@ -139,73 +136,13 @@ export default function Student() {
     getTableList(page)
   }
 
-  useEffect(() => {
-    getTableList(pageIndex)
-    request.get(getClassesList, {}).then((res) => {
-      if (res.length > 0) {
-        const resObj = res.map((item) => {
-          return { label: item.className, value: item.id }
-        })
-        setClassOptions(resObj)
-      }
-    })
-  }, [])
 
   // 展示表格那行是否可编辑的状态
   const isEditing = (record) => record.id === editingKey;
   const edit = (record) => {
-    formTable.setFieldsValue({
-      name: '',
-      age: '',
-      number: '',
-      className: '',
-      ...record,
-    });
-
     setEditingKey(record.id);
   };
 
-  const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-  }) => {
-
-    let inputNode = <Input />;
-    if (inputType === 'number') {
-      inputNode = <InputNumber />
-    }
-    if (inputType === 'select') {
-      inputNode = <Select options={classOptions} />
-    }
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={dataIndex}
-            style={{
-              margin: 0,
-            }}
-            rules={[
-              {
-                required: true,
-                message: `请输入 ${title}!`,
-              },
-            ]}
-          >
-            {inputNode}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
   // 修改该行的修改内容
   const save = async (key) => {
     try {
@@ -299,15 +236,8 @@ export default function Student() {
           </Form>
           <div style={{ marginTop: 30 }}></div>
           <Form form={formTable} component={false}>
-            <Table columns={mergedColumns} bordered dataSource={dataSource}
-              pagination={false}
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
-              scroll={{ x: 'max-content', y: 400 }}
-            ></Table>
+            <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
+              classOptions={classOptions} formTable={formTable}></EditTable>
           </Form>
           <div style={{ marginTop: 30 }}></div>
           <div style={{ textAlign: 'end' }}>

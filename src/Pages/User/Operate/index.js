@@ -4,8 +4,9 @@ import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import Header from '../../../Components/Header/index';
 import Footer from '../../../Components/Footer';
-import request from '../../../Config/request';
+import request, { baseURL } from '../../../Config/request';
 import { getSystemUserInfoUrl, updateSystemUserInfoUrl } from '../../../Requests/UserApi';
+import { uploadUrl } from '../../../Requests/FileApi'
 
 
 const { Content } = Layout
@@ -42,7 +43,7 @@ export default function Operate() {
         const data = operateForm.getFieldsValue()
         data['avatar'] = imgUrl
         let gender = operateForm.getFieldValue("gender")
-        
+
         data['gender'] = gender
         console.log(data)
         request.postJson(updateSystemUserInfoUrl, {}, data)
@@ -84,7 +85,7 @@ export default function Operate() {
                         </Form.Item>
                         <Form.Item label="头像" name="avatar">
                             <Upload listType="picture-card" className="avatar-uploader" name="file" showUploadList={false}
-                                action="http://localhost:8080/file/upload" onChange={handleChange}>
+                                action={baseURL + uploadUrl} onChange={handleChange}>
                                 {imgUrl ? (
                                     <img
                                         src={imgUrl}

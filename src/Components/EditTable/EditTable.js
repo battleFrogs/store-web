@@ -1,10 +1,10 @@
-import { Breadcrumb, Button, Form, Input, InputNumber, Select, Space, Table, theme, Modal, Popconfirm, Pagination } from 'antd';
-import React, { useEffect } from 'react'
+import { Form, Table } from 'antd';
+import React from 'react';
 
 export default function EditTable(props) {
 
     const { columns, dataSource, editingKey, formTable } = props
-    const isEditing = (record) => record.teacherId === editingKey;
+    const isEditing = (record) => record.id === editingKey;
 
     // 对行的单元格设置编辑属性
     const mergedColumns = columns.map((col) => {
