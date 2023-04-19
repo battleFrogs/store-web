@@ -1,13 +1,11 @@
-import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination, Select, Upload } from 'antd';
+import { Button, Form, Input, InputNumber, Layout, Modal, Pagination, Popconfirm, Select, Space, Upload, theme } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 
-import Footer from '../../../Components/Footer';
-import Header from '../../../Components/Header';
+import EditTable from '../../../Components/EditTable/EditTable';
 import request, { baseURL } from '../../../Config/request';
 import { getClassesList } from '../../../Requests/ClassesApi';
-import { deleteOneStudentUrl, getPageStudentUrl, insertStudentUrl, updateStudentUrl, exportExcelStudentUrl, importExcelStudentUrl } from '../../../Requests/StudentApi';
-import EditTable from '../../../Components/EditTable/EditTable';
+import { deleteOneStudentUrl, exportExcelStudentUrl, getPageStudentUrl, importExcelStudentUrl, insertStudentUrl, updateStudentUrl } from '../../../Requests/StudentApi';
 
 
 const { Content } = Layout;
@@ -108,7 +106,6 @@ export default function Student() {
   // 获取列表详情数据
   const getTableList = (pageIndexParam) => {
     let data = form.getFieldsValue()
-    console.log(data)
     const filteredObj = Object.fromEntries(
       Object.entries(data)
         .filter(([_, value]) => value)
@@ -146,13 +143,11 @@ export default function Student() {
   // 修改该行的修改内容
   const save = async (key) => {
     try {
-      console.log(formTable.getFieldsValue())
       await formTable.validateFields()
       await request.postJson(updateStudentUrl, { id: key }, formTable.getFieldsValue())
       getTableList(pageIndex)
       setEditingKey('');
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
     }
   };
 
@@ -173,7 +168,6 @@ export default function Student() {
   const insert = async () => {
     await formInsert.validateFields()
     const data = formInsert.getFieldsValue()
-    console.log(data)
     if (data['name'] && data['age'] && data['number'] && data['classId']) {
       await request.postJson(insertStudentUrl, {}, data)
       setIsModalOpen(false)
