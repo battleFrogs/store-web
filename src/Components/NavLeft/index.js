@@ -22,7 +22,7 @@ export default function NavLeft(props) {
     }, [])
 
     return (
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <Sider>
             <div
                 style={{
                     height: 32,
