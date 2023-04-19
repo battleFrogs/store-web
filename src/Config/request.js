@@ -13,7 +13,6 @@ const service = axios.create({
 // 添加请求前拦截器
 service.interceptors.request.use(config => {
     if (sessionStorage.getItem("token")) {
-        console.log(sessionStorage.getItem("token"))
         config.headers['Authorization'] = sessionStorage.getItem("token")
     }
     return config

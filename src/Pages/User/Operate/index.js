@@ -45,7 +45,6 @@ export default function Operate() {
         let gender = operateForm.getFieldValue("gender")
 
         data['gender'] = gender
-        console.log(data)
         request.postJson(updateSystemUserInfoUrl, {}, data)
     }
 
