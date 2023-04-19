@@ -28,7 +28,9 @@ export default function AppRouter() {
                     <Route path='classes' element={<Classes />} />
                     <Route path='teacher' element={<Teacher />} />
                 </Route>
-                <Route path='noAllow' element={<NoAllow />} />
+                <Route path='noAllow' element={<ContentLayout />} >
+                    <Route path="not" element={<NoAllow />} />
+                </Route>
                 <Route path='goods' element={<ContentLayout />} >
                     <Route path='list' element={<Goods />} />
                 </Route>

@@ -120,7 +120,7 @@ export const getKeyByPathName = (menu, pathName) => {
         }
         if (value.path === pathName) {
             if (!value.identity.includes(identity)) {
-                history.push("/noAllow")
+                history.push("/noAllow/not")
             }
             return Array.from(value.key)
         }
