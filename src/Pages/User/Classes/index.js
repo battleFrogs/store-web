@@ -68,43 +68,25 @@ export default function Classes() {
     }
 
     return (
-        <Layout className="site-layout">
-            <Header />
-            <Content
-                style={{ margin: '0 16px' }}
-            >
-                <Breadcrumb
-                    style={{ margin: '16px 0', }}
-                >
-                    <Breadcrumb.Item>用户操作</Breadcrumb.Item>
-                    <Breadcrumb.Item>班级信息</Breadcrumb.Item>
-                </Breadcrumb>
-                <div
-                    style={{
-                        padding: 24,
-                        minHeight: 360,
-                        background: colorBgContainer,
-                    }}
-                >
-                    <Button type='primary' onClick={() => setModalShow(true)}>新增</Button>
-                    <div style={{ marginTop: 15 }}></div>
-                    <Table columns={columns} bordered={true} dataSource={dataSource}></Table>
-                </div>
-                <Modal title="新增数据" open={modalShow} footer={null} onCancel={() => setModalShow(false)}>
-                    <Form style={{ marginTop: 20 }} form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
-                        <Form.Item name="className" label="班级名称" rules={[{ required: true, message: "班级名称不能为空" }]}>
-                            <Input></Input>
-                        </Form.Item>
-                        <Form.Item name="grade" label="年级" rules={[{ required: true, message: "年级不能为空" }]}>
-                            <Input></Input>
-                        </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 4 }}>
-                            <Button type='primary' onClick={() => insertData()}>提交</Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
-            </Content>
-            <Footer />
-        </Layout >
+        <div>
+            <div>
+                <Button type='primary' onClick={() => setModalShow(true)}>新增</Button>
+                <div style={{ marginTop: 15 }}></div>
+                <Table columns={columns} bordered={true} dataSource={dataSource}></Table>
+            </div>
+            <Modal title="新增数据" open={modalShow} footer={null} onCancel={() => setModalShow(false)}>
+                <Form style={{ marginTop: 20 }} form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 10 }}>
+                    <Form.Item name="className" label="班级名称" rules={[{ required: true, message: "班级名称不能为空" }]}>
+                        <Input></Input>
+                    </Form.Item>
+                    <Form.Item name="grade" label="年级" rules={[{ required: true, message: "年级不能为空" }]}>
+                        <Input></Input>
+                    </Form.Item>
+                    <Form.Item wrapperCol={{ offset: 4 }}>
+                        <Button type='primary' onClick={() => insertData()}>提交</Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </div >
     )
 }

@@ -5,10 +5,12 @@ import { result, menu, getKeyByPathName, getOpenKeys } from '../../Constants/men
 
 const { Sider } = Layout;
 
-export default function NavLeft() {
+export default function NavLeft(props) {
+
+    const selectKeys = props.selectKeys
+    const setSelectKeys = props.setSelectKeys
 
     const [collapsed, setCollapsed] = useState(false);
-    const [selectKeys, setSelectKeys] = useState([]);
     const [identity, setIdentity] = useState('student')
 
     let location = useLocation();
@@ -20,19 +22,16 @@ export default function NavLeft() {
     }, [])
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div
-                    style={{
-                        height: 32,
-                        margin: 16,
-                        background: 'rgba(255, 255, 255, 0.2)',
-                    }}
-                />
-                <Menu theme="dark" onSelect={({ key }) => { setSelectKeys([key]) }} selectedKeys={selectKeys}
-                    openKeys={getOpenKeys()} mode="inline" items={result(menu, identity)} />
-            </Sider>
-            <Outlet />
-        </Layout>
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+            <div
+                style={{
+                    height: 32,
+                    margin: 16,
+                    background: 'rgba(255, 255, 255, 0.2)',
+                }}
+            />
+            <Menu theme="dark" onSelect={({ key }) => { setSelectKeys([key]) }} selectedKeys={selectKeys}
+                openKeys={getOpenKeys()} mode="inline" items={result(menu, identity)} />
+        </Sider>
     )
 }

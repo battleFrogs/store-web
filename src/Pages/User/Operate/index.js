@@ -56,79 +56,59 @@ export default function Operate() {
     };
 
     return (
-        <Layout className="site-layout">
-            <Header />
-            <Content
-                style={{ margin: '0 16px' }}
-            >
-                <Breadcrumb
-                    style={{ margin: '16px 0', }}
-                >
-                    <Breadcrumb.Item>用户操作</Breadcrumb.Item>
-                    <Breadcrumb.Item>操作者信息</Breadcrumb.Item>
-                </Breadcrumb>
-                <div
-                    style={{
-                        padding: 24,
-                        minHeight: 360,
-                        background: colorBgContainer,
-                    }}
-                >
-                    <Form form={operateForm} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }} style={{ maxWidth: 400 }}>
-                        <Form.Item label="用户名" name="username" rules={[
-                            {
-                                required: true,
-                                message: '用户名不能为空',
-                            },
-                        ]}>
-                            <Input></Input>
-                        </Form.Item>
-                        <Form.Item label="头像" name="avatar">
-                            <Upload listType="picture-card" className="avatar-uploader" name="file" showUploadList={false}
-                                action={baseURL + uploadUrl} onChange={handleChange}>
-                                {imgUrl ? (
-                                    <img
-                                        src={imgUrl}
-                                        alt="avatar"
-                                        style={{
-                                            width: '100%',
-                                            height: '100%'
-                                        }}
-                                    />
-                                ) : (
-                                    <div>
-                                        <PlusOutlined />
-                                        <div
-                                            style={{
-                                                marginTop: 8,
-                                            }}
-                                        >
-                                            Upload
-                                        </div>
-                                    </div>
-                                )}
+        <div>
+            <Form form={operateForm} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }} style={{ maxWidth: 400 }}>
+                <Form.Item label="用户名" name="username" rules={[
+                    {
+                        required: true,
+                        message: '用户名不能为空',
+                    },
+                ]}>
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item label="头像" name="avatar">
+                    <Upload listType="picture-card" className="avatar-uploader" name="file" showUploadList={false}
+                        action={baseURL + uploadUrl} onChange={handleChange}>
+                        {imgUrl ? (
+                            <img
+                                src={imgUrl}
+                                alt="avatar"
+                                style={{
+                                    width: '100%',
+                                    height: '100%'
+                                }}
+                            />
+                        ) : (
+                            <div>
+                                <PlusOutlined />
+                                <div
+                                    style={{
+                                        marginTop: 8,
+                                    }}
+                                >
+                                    Upload
+                                </div>
+                            </div>
+                        )}
 
-                            </Upload>
-                        </Form.Item>
-                        <Form.Item label="性别" name="gender">
-                            <Select options={genderOption}>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item label="描述" name="description">
-                            <TextArea showCount maxLength={500} style={{ height: 120 }}>
-                            </TextArea>
-                        </Form.Item>
-                        <Form.Item wrapperCol={{
-                            offset: 6,
-                            span: 16,
-                        }}>
-                            <Button type='primary' onClick={() => save()}>保存</Button>
-                        </Form.Item>
+                    </Upload>
+                </Form.Item>
+                <Form.Item label="性别" name="gender">
+                    <Select options={genderOption}>
+                    </Select>
+                </Form.Item>
+                <Form.Item label="描述" name="description">
+                    <TextArea showCount maxLength={500} style={{ height: 120 }}>
+                    </TextArea>
+                </Form.Item>
+                <Form.Item wrapperCol={{
+                    offset: 6,
+                    span: 16,
+                }}>
+                    <Button type='primary' onClick={() => save()}>保存</Button>
+                </Form.Item>
 
-                    </Form>
-                </div>
-            </Content>
-            <Footer />
-        </Layout >
+            </Form>
+        </div >
     )
 }

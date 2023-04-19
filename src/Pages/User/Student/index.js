@@ -198,77 +198,57 @@ export default function Student() {
 
 
   return (
-    <Layout className="site-layout">
-      <Header />
-      <Content
-        style={{ margin: '0 16px' }}
-      >
-        <Breadcrumb
-          style={{ margin: '16px 0', }}
-        >
-          <Breadcrumb.Item>用户操作</Breadcrumb.Item>
-          <Breadcrumb.Item>学生列表</Breadcrumb.Item>
-        </Breadcrumb>
-        <div
-          style={{
-            padding: 24,
-            minHeight: 360,
-            background: colorBgContainer,
-          }}
-        >
-          <Form form={form} layout="inline">
-            <Form.Item name="name" label="姓名">
-              <Input />
-            </Form.Item>
-            <Form.Item name="age" label="年龄">
-              <InputNumber />
-            </Form.Item>
-            <Form.Item name="number" label="学号">
-              <InputNumber />
-            </Form.Item>
-            <Space size="small">
-              <Button type="primary" onClick={() => submit()}>查询</Button>
-              <Button type="dashed" onClick={() => clear()}>清空</Button>
-              <Button type="primary" onClick={() => setIsModalOpen(true)}>新增</Button>
-              <Button type="dashed" onClick={() => exportExcel()}>导出</Button>
-              <Upload action={baseURL + importExcelStudentUrl} fileList={null} headers={{ 'Authorization': sessionStorage.getItem("token") }}><Button type="primary" >导入</Button></Upload>
-            </Space>
-          </Form>
-          <div style={{ marginTop: 30 }}></div>
-          <Form form={formTable} component={false}>
-            <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
-              classOptions={classOptions} formTable={formTable}></EditTable>
-          </Form>
-          <div style={{ marginTop: 30 }}></div>
-          <div style={{ textAlign: 'end' }}>
-            <Pagination defaultCurrent={1} defaultPageSize={10} total={pageSizeTotal} pageSizeOptions={['10']} hideOnSinglePage={true}
-              onChange={(page) => changePage(page)} />
-          </div>
+    <div>
+      <Form form={form} layout="inline">
+        <Form.Item name="name" label="姓名">
+          <Input />
+        </Form.Item>
+        <Form.Item name="age" label="年龄">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="number" label="学号">
+          <InputNumber />
+        </Form.Item>
+        <Space size="small">
+          <Button type="primary" onClick={() => submit()}>查询</Button>
+          <Button type="dashed" onClick={() => clear()}>清空</Button>
+          <Button type="primary" onClick={() => setIsModalOpen(true)}>新增</Button>
+          <Button type="dashed" onClick={() => exportExcel()}>导出</Button>
+          <Upload action={baseURL + importExcelStudentUrl} fileList={null} headers={{ 'Authorization': sessionStorage.getItem("token") }}><Button type="primary" >导入</Button></Upload>
+        </Space>
+      </Form>
+      <div style={{ marginTop: 30 }}></div>
+      <Form form={formTable} component={false}>
+        <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
+          classOptions={classOptions} formTable={formTable}></EditTable>
+      </Form>
+      <div style={{ marginTop: 30 }}></div>
+      <div style={{ textAlign: 'end' }}>
+        <Pagination defaultCurrent={1} defaultPageSize={10} total={pageSizeTotal} pageSizeOptions={['10']} hideOnSinglePage={true}
+          onChange={(page) => changePage(page)} />
+      </div>
 
-          <Modal title="新增数据" open={isModalOpen} onOk={() => setIsModalOpen(false)}
-            onCancel={() => setIsModalOpen(false)} bodyStyle={{ margin: 40 }} footer={null}>
-            <Form form={formInsert} labelCol={{ span: 4 }}
-              wrapperCol={{ span: 20 }} >
-              <Form.Item name="name" label="姓名" rules={[{ required: true, message: "姓名不能为空" }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item name="age" label="年龄" rules={[{ required: true, message: "年龄不能为空" }]}>
-                <InputNumber />
-              </Form.Item>
-              <Form.Item name="number" label="学号" rules={[{ required: true, message: "学号不能为空" }]}>
-                <InputNumber />
-              </Form.Item>
-              <Form.Item name="classId" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
-                <Select options={classOptions}></Select>
-              </Form.Item>
-              <div style={{ textAlign: 'center' }}>
-                <Button type='primary' onClick={insert}>确定新增</Button>
-              </div>
-            </Form>
-          </Modal>
-        </div>
-      </Content>
-      <Footer />
-    </Layout>
+      <Modal title="新增数据" open={isModalOpen} onOk={() => setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)} bodyStyle={{ margin: 40 }} footer={null}>
+        <Form form={formInsert} labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }} >
+          <Form.Item name="name" label="姓名" rules={[{ required: true, message: "姓名不能为空" }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="age" label="年龄" rules={[{ required: true, message: "年龄不能为空" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item name="number" label="学号" rules={[{ required: true, message: "学号不能为空" }]}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item name="classId" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
+            <Select options={classOptions}></Select>
+          </Form.Item>
+          <div style={{ textAlign: 'center' }}>
+            <Button type='primary' onClick={insert}>确定新增</Button>
+          </div>
+        </Form>
+      </Modal>
+    </div>
   )
 }

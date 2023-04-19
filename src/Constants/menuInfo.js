@@ -45,6 +45,20 @@ export const menu = [
         labelName: '操作内容',
 
     },
+    {
+        key: "7",
+        icon: <PieChartOutlined />,
+        labelName: "商品",
+        identity: ["student", "teacher", "super"],
+        children: [
+            {
+                key: "8",
+                path: "/goods/list",
+                labelName: "商品列表",
+                identity: ["teacher", "super"]
+            }
+        ]
+    },
 ]
 
 /**
@@ -100,19 +114,42 @@ export const getKeyByPathName = (menu, pathName) => {
         const value = menu[index];
         if (value.children) {
             const valueResult = getKeyByPathName(value.children, pathName)
-            if (valueResult) {
+            if (valueResult.length > 0) {
                 return valueResult
             }
         }
-        if (!value.identity.includes(identity)) {
-            history.push("/noAllow")
-        }
         if (value.path === pathName) {
+            if (!value.identity.includes(identity)) {
+                history.push("/noAllow")
+            }
             return Array.from(value.key)
         }
     }
     return []
 }
+
+export const getLabelNameByPathName = (menu, keyName) => {
+
+    let result = []
+    for (let index = 0; index < menu.length; index++) {
+        const value = menu[index];
+        if (value.children) {
+            const valueResult = getLabelNameByPathName(value.children, keyName)
+            if (valueResult.length > 0) {
+                result.push(value.labelName)
+                result.push(valueResult)
+            }
+        }
+        if (value.key == keyName) {
+            result.push(value.labelName)
+            return result
+        }
+    }
+
+    return result
+}
+
+
 
 
 /**
