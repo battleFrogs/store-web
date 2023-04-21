@@ -136,9 +136,14 @@ export default function Student() {
 
   // 展示表格那行是否可编辑的状态
   const isEditing = (record) => record.id === editingKey;
+
+  // 编辑时内容回显
   const edit = (record) => {
+    formTable.setFieldsValue({
+        ...record,
+    })
     setEditingKey(record.id);
-  };
+}
 
   // 修改该行的修改内容
   const save = async (key) => {
@@ -214,7 +219,7 @@ export default function Student() {
       <div style={{ marginTop: 30 }}></div>
       <Form form={formTable} component={false}>
         <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
-          classOptions={classOptions} formTable={formTable}></EditTable>
+          classOptions={classOptions} formTable={formTable} single={true}></EditTable>
       </Form>
       <div style={{ marginTop: 30 }}></div>
       <div style={{ textAlign: 'end' }}>

@@ -150,51 +150,40 @@ export default function Teacher() {
     const { token: { colorBgContainer } } = theme.useToken();
 
     return (
-        <Layout className="site-layout">
-            <Header />
-            <Content
-                style={{ margin: '0 16px' }}
+        <div>
+            <div
+                style={{
+                    padding: 24,
+                    minHeight: 360,
+                    background: colorBgContainer,
+                }}
             >
-                <Breadcrumb
-                    style={{ margin: '16px 0', }}
-                >
-                    <Breadcrumb.Item>用户操作</Breadcrumb.Item>
-                    <Breadcrumb.Item>教师信息</Breadcrumb.Item>
-                </Breadcrumb>
-                <div
-                    style={{
-                        padding: 24,
-                        minHeight: 360,
-                        background: colorBgContainer,
-                    }}
-                >
-                    <Button type='primary' onClick={() => setIsModalOpen(true)}>新增</Button>
-                    <div style={{ marginTop: 15 }}></div>
+                <Button type='primary' onClick={() => setIsModalOpen(true)}>新增</Button>
+                <div style={{ marginTop: 15 }}></div>
 
-                    <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
-                        classOptions={classOptions} formTable={formTable}></EditTable>
-                </div>
-                <Modal title="新增数据" open={isModalOpen} onOk={() => setIsModalOpen(false)}
-                    onCancel={() => setIsModalOpen(false)} bodyStyle={{ margin: 40 }} footer={null}>
-                    <Form form={formInsert} labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 20 }} >
-                        <Form.Item name="name" label="姓名" rules={[{ required: true, message: "姓名不能为空" }]}>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item name="age" label="年龄" rules={[{ required: true, message: "年龄不能为空" }]}>
-                            <InputNumber />
-                        </Form.Item>
-                        <Form.Item name="classId" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
-                            <Select mode='multiple' options={classOptions}></Select>
-                        </Form.Item>
-                        <div style={{ textAlign: 'center' }}>
-                            <Button type='primary' onClick={insert}>确定新增</Button>
-                        </div>
-                    </Form>
-                </Modal>
-            </Content>
-            <Footer />
-        </Layout >
+                <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
+                    classOptions={classOptions} formTable={formTable} single={true}></EditTable>
+            </div>
+            <Modal title="新增数据" open={isModalOpen} onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)} bodyStyle={{ margin: 40 }} footer={null}>
+                <Form form={formInsert} labelCol={{ span: 4 }}
+                    wrapperCol={{ span: 20 }} >
+                    <Form.Item name="name" label="姓名" rules={[{ required: true, message: "姓名不能为空" }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="age" label="年龄" rules={[{ required: true, message: "年龄不能为空" }]}>
+                        <InputNumber />
+                    </Form.Item>
+                    <Form.Item name="classId" label="班级" rules={[{ required: true, message: "班级不能为空" }]}>
+                        <Select mode='multiple' options={classOptions}></Select>
+                    </Form.Item>
+                    <div style={{ textAlign: 'center' }}>
+                        <Button type='primary' onClick={insert}>确定新增</Button>
+                    </div>
+                </Form>
+            </Modal>
+        </div>
+
     )
 
 }
