@@ -219,7 +219,7 @@ export default function Student() {
       <div style={{ marginTop: 30 }}></div>
       <Form form={formTable} component={false}>
         <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
-          classOptions={classOptions} formTable={formTable} single={true}></EditTable>
+          classOptions={classOptions} formTable={formTable}></EditTable>
       </Form>
       <div style={{ marginTop: 30 }}></div>
       <div style={{ textAlign: 'end' }}>

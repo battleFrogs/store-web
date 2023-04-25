@@ -1,9 +1,16 @@
-import { Button, Card, Form, Input, InputNumber, Space, Switch, Table, Upload } from 'antd'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useForm } from 'antd/es/form/Form'
-import React, { useState } from 'react'
-import './index.css'
-import EditTable from '../../Components/EditTable/EditTable';
+import { MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Image, Input, InputNumber, Space, Switch, Upload } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import React, { useState } from 'react';
+import EditTableAll from '../../Components/EditTableAll/EditTableAll';
+import './index.css';
+import { baseURL } from '../../Config/request';
+import { uploadUrl } from '../../Requests/FileApi';
+
+
+
+const { TextArea } = Input;
+
 
 export default function Goods() {
 
@@ -36,44 +43,81 @@ export default function Goods() {
         },
     ]
 
-    const [dataSource, setDataSource] = useState([
-        {
-            skuName: "规格1",
-            num: 10,
-            price: 100
-        }
-    ])
-
+    const [dataSource, setDataSource] = useState([])
+    const [goodsImgUrl, setGoodsImgUrl] = useState("")
 
     const [baseForm] = useForm()
     const [detailForm] = useForm()
     const [formTable] = useForm()
 
     const onSubmit = (values) => {
-        let data = []
         let index = 0
+        let resultList = []
+        let result = []
         values['list1'].forEach(res => {
-            let name = res.level1Input
-            let level2List = res.level2List
-            level2List.forEach(level2 => {
-                let obj = {}
-                obj['id'] = index
-                obj['skuName'] = name + level2.level2Input
-                obj['num'] = 1
-                obj['price'] = 0.01
-                data.push(obj)
-                index++
+            let res1List = res.level2List.map(res1 => {
+                return res1['level2Input']
             })
+            resultList.push(res1List)
         })
-        console.log(data)
-        setDataSource(data)
-        console.log({ table: data })
-        formTable.setFieldsValue({ table: data })
+
+        let size = 0
+        let sku = resultList[0]
+        for (let i = 0; i < sku.length; i++) {
+            let resultName = ""
+            const name = sku[i];
+            resultName += name
+            let flag = getNextSku(resultName, size + 1);
+            if (!flag) {
+                result.push({
+                    'id': index,
+                    'skuName': resultName,
+                    'num': 1,
+                    'price': 0.01
+                });
+                index++;
+            }
+
+        }
+
+        // 递归获取下一个sku信息
+        function getNextSku(resultName, size) {
+            let sku1 = resultList[size];
+            if (sku1 && sku1.length > 0) {
+                for (let j = 0; j < sku1.length; j++) {
+                    let resultName1 = "";
+                    const name1 = sku1[j];
+                    if (size == 0) {
+                        resultName1 += name1
+                    } else {
+                        resultName1 += resultName + "," + name1;
+                    }
+                    let flag = getNextSku(resultName1, size + 1)
+                    if (!flag) {
+                        result.push({
+                            'id': index,
+                            'skuName': resultName1,
+                            'num': 1,
+                            'price': 0.01
+                        });
+                        index++;
+                    }
+                }
+                return true
+            }
+            return false
+        }
+
+        setDataSource(result)
+        formTable.setFieldsValue({ table: result })
     }
 
-    const onError = ({ errorFields }) => [
-        console.log(errorFields)
-    ]
+    const changeImage = (info) => {
+        if (info.file.status === 'done') {
+            setGoodsImgUrl(info.file.response.data)
+            baseForm.setFieldValue("picture", info.file.response.data)
+        }
+    }
 
     return (
         <div>
@@ -81,17 +125,23 @@ export default function Goods() {
             <div style={{ marginTop: 20 }}></div>
             <Card bordered={true}>
                 <Form form={baseForm} wrapperCol={{ span: 4 }} labelCol={{ span: 2 }} >
-                    <Form.Item label="商品名称" name="goodsName" required>
+                    <Form.Item label="商品名称" name="goodsName" rules={[{ required: true, message: "商品名称必传递" }]}>
                         <Input></Input>
                     </Form.Item>
-                    <Form.Item label="商品库存" name="stock" required>
-                        <InputNumber></InputNumber>
+                    <Form.Item label="商品描述" name="description" rules={[{ required: true, message: "商品描述必传递" }]}>
+                        <TextArea rows={4} />
                     </Form.Item>
-                    <Form.Item label="是否上架">
+                    <Form.Item label="是否上架" name="onSelf" rules={[{ required: true, message: "是否上架参数必传递" }]}>
                         <Switch></Switch>
                     </Form.Item>
-                    <Form.Item label="商品图片">
-                        <Upload>
+                    <Form.Item label="商品图片" name="picture" rules={[{
+                        validator: () => {
+                            if (!goodsImgUrl) { return Promise.reject("商品图片必穿") }
+                        }
+                    }]}>
+                        {goodsImgUrl ? <div style={{ display: "inline", marginRight: 20 }}><Image width={80} src={goodsImgUrl} ></Image></div> : <></>}
+                        <Upload action={baseURL + uploadUrl} onChange={changeImage}
+                            onRemove={(file) => { setGoodsImgUrl(""); baseForm.setFieldValue("picture", "") }}>
                             <Button type='primary'>上传</Button>
                         </Upload>
                     </Form.Item>
@@ -103,7 +153,7 @@ export default function Goods() {
             <span>规格信息</span>
             <div style={{ marginTop: 20 }}></div>
             <Card>
-                <Form form={detailForm} onFinish={onSubmit} onFinishFailed={onError}>
+                <Form form={detailForm} onFinish={onSubmit} >
                     <Form.List name={['list1']} >
                         {(fields, { add, remove }, { errors }) => (
                             <>
@@ -142,10 +192,12 @@ export default function Goods() {
                 </Form>
                 <div style={{ marginTop: 20 }}></div>
                 <Form>
-                    <EditTable columns={columns} dataSource={dataSource} formTable={formTable} single={false}></EditTable>
+                    <EditTableAll columns={columns} dataSource={dataSource} formTable={formTable} />
                 </Form>
             </Card>
-        </div>
+            <div style={{ marginTop: 20 }}></div>
+            <Card ><Button type='primary' onClick={async () => { baseForm.validateFields(); console.log(baseForm.getFieldsValue()) }}>创建商品</Button></Card>
+        </div >
     )
 
     function getSkuValueList() {

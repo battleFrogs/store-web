@@ -1,12 +1,9 @@
 import { Form, Table } from 'antd';
 import React from 'react';
 
-export default function EditTable(props) {
+export default function EditTableAll(props) {
 
-    const { columns, dataSource, editingKey, formTable, single } = props
-    const isEditing = (record) => {
-        return record.id === editingKey
-    };
+    const { columns, dataSource, formTable } = props
 
     // 对行的单元格设置编辑属性
     const mergedColumns = columns.map((col) => {
@@ -21,14 +18,14 @@ export default function EditTable(props) {
                     inputType: col.inputType,
                     dataIndex: col.dataIndex,
                     title: col.title,
-                    editing: isEditing(record),
+                    editing: true,
                 }
             },
         };
     });
 
-    // td单元格修改的样式
-    const EditableCell = ({
+
+    const EditableCellAll = ({
         editing,
         dataIndex,
         title,
@@ -42,7 +39,7 @@ export default function EditTable(props) {
             <td {...restProps}>
                 {editing ? (
                     <Form.Item
-                        name={dataIndex}
+                        name={["table", record.id, dataIndex]}
                         style={{
                             margin: 0,
                         }}
@@ -52,16 +49,16 @@ export default function EditTable(props) {
                     </Form.Item>
                 ) : (
                     children
-                )}
-            </td>
+                )
+                }
+            </td >
         );
     };
-
 
     return (
         <div>
             <Form form={formTable} component={false}>
-                <Table columns={mergedColumns} bordered={true} dataSource={dataSource} components={{ body: { cell: EditableCell } }}></Table>
+                <Table pagination={false} columns={mergedColumns} bordered={true} dataSource={dataSource} components={{ body: { cell: EditableCellAll, } }}></Table>
             </Form>
         </div>
     )

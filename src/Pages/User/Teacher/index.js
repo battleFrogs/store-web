@@ -162,7 +162,7 @@ export default function Teacher() {
                 <div style={{ marginTop: 15 }}></div>
 
                 <EditTable columns={columns} dataSource={dataSource} editingKey={editingKey}
-                    classOptions={classOptions} formTable={formTable} single={true}></EditTable>
+                    classOptions={classOptions} formTable={formTable} ></EditTable>
             </div>
             <Modal title="新增数据" open={isModalOpen} onOk={() => setIsModalOpen(false)}
                 onCancel={() => setIsModalOpen(false)} bodyStyle={{ margin: 40 }} footer={null}>

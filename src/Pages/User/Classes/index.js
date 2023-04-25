@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Space, Table, theme, Modal, Popconfirm, Pagination } from 'antd';
-import Footer from '../../../Components/Footer';
-import Header from '../../../Components/Header';
+import { Button, Form, Input, Layout, Modal, Table, theme } from 'antd';
+import React, { useEffect, useState } from 'react';
 import request from '../../../Config/request';
 import { deleteById, getPageClassesList, insertClassesData } from '../../../Requests/ClassesApi';
 
