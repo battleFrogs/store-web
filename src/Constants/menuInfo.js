@@ -53,6 +53,12 @@ export const menu = [
         children: [
             {
                 key: "8",
+                path: "/goods/edit",
+                labelName: "商品创建",
+                identity: ["teacher", "super"]
+            },
+            {
+                key: "9",
                 path: "/goods/list",
                 labelName: "商品列表",
                 identity: ["teacher", "super"]

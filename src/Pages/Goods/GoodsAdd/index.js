@@ -2,17 +2,17 @@ import { MinusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Image, Input, InputNumber, Space, Switch, Upload } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import React, { useState } from 'react';
-import EditTableAll from '../../Components/EditTableAll/EditTableAll';
+import EditTableAll from '../../../Components/EditTableAll/EditTableAll';
 import './index.css';
-import { baseURL } from '../../Config/request';
-import { uploadUrl } from '../../Requests/FileApi';
+import { baseURL } from '../../../Config/request';
+import { uploadUrl } from '../../../Requests/FileApi';
 
 
 
 const { TextArea } = Input;
 
 
-export default function Goods() {
+export default function GoodsAdd() {
 
     const columns = [
         {
@@ -51,6 +51,9 @@ export default function Goods() {
     const [formTable] = useForm()
 
     const onSubmit = (values) => {
+        if (values['list1'].length < 1) {
+            return;
+        }
         let index = 0
         let resultList = []
         let result = []
@@ -115,8 +118,22 @@ export default function Goods() {
     const changeImage = (info) => {
         if (info.file.status === 'done') {
             setGoodsImgUrl(info.file.response.data)
-            baseForm.setFieldValue("picture", info.file.response.data)
         }
+    }
+
+    const normFile = (e) => {
+        if (e?.file.status === "done") {
+            return e?.file.response.data;
+        }
+    };
+
+    const createGoods = async () => {
+        await baseForm.validateFields();
+        let table = formTable.getFieldsValue()
+        if (!table || table.length == 0) {
+
+        }
+        console.log({ ...baseForm.getFieldsValue(), ...formTable.getFieldsValue() })
     }
 
     return (
@@ -124,26 +141,24 @@ export default function Goods() {
             <span>基本信息</span>
             <div style={{ marginTop: 20 }}></div>
             <Card bordered={true}>
-                <Form form={baseForm} wrapperCol={{ span: 4 }} labelCol={{ span: 2 }} >
+                <Form form={baseForm} wrapperCol={{ span: 4 }} labelCol={{ span: 2 }} initialValues={{ switch: true }} >
                     <Form.Item label="商品名称" name="goodsName" rules={[{ required: true, message: "商品名称必传递" }]}>
                         <Input></Input>
                     </Form.Item>
                     <Form.Item label="商品描述" name="description" rules={[{ required: true, message: "商品描述必传递" }]}>
                         <TextArea rows={4} />
                     </Form.Item>
-                    <Form.Item label="是否上架" name="onSelf" rules={[{ required: true, message: "是否上架参数必传递" }]}>
-                        <Switch></Switch>
+                    <Form.Item name="switch" label="是否上架" valuePropName="checked">
+                        <Switch />
                     </Form.Item>
-                    <Form.Item label="商品图片" name="picture" rules={[{
-                        validator: () => {
-                            if (!goodsImgUrl) { return Promise.reject("商品图片必穿") }
-                        }
-                    }]}>
+                    <Form.Item label="商品图片"  >
                         {goodsImgUrl ? <div style={{ display: "inline", marginRight: 20 }}><Image width={80} src={goodsImgUrl} ></Image></div> : <></>}
-                        <Upload action={baseURL + uploadUrl} onChange={changeImage}
-                            onRemove={(file) => { setGoodsImgUrl(""); baseForm.setFieldValue("picture", "") }}>
-                            <Button type='primary'>上传</Button>
-                        </Upload>
+                        <Form.Item noStyle getValueFromEvent={normFile} name="upload" rules={[{ required: true, message: "商品图片必传" }]}>
+                            <Upload action={baseURL + uploadUrl} onChange={changeImage}
+                                onRemove={(file) => { setGoodsImgUrl(""); }} maxCount={1}>
+                                <Button type='primary'>上传</Button>
+                            </Upload>
+                        </Form.Item>
                     </Form.Item>
 
                 </Form>
@@ -185,6 +200,7 @@ export default function Goods() {
                                 <Space size="large">
                                     <Button type='primary' onClick={() => add()}>添加规格名称</Button>
                                     <Button type="default" htmlType='submit'>生成</Button>
+                                    {/* <span style={{ color: "red" }}>需要有规格！！</span> */}
                                 </Space>
                             </>
                         )}
@@ -196,7 +212,7 @@ export default function Goods() {
                 </Form>
             </Card>
             <div style={{ marginTop: 20 }}></div>
-            <Card ><Button type='primary' onClick={async () => { baseForm.validateFields(); console.log(baseForm.getFieldsValue()) }}>创建商品</Button></Card>
+            <Card ><Button type='primary' onClick={createGoods}>创建商品</Button></Card>
         </div >
     )
 

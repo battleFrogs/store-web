@@ -10,8 +10,9 @@ import Student from './Pages/User/Student';
 import Classes from './Pages/User/Classes';
 import Teacher from './Pages/User/Teacher';
 import NoAllow from './Pages/NoAllow';
-import Goods from './Pages/Goods';
+import GoodsAdd from './Pages/Goods/GoodsAdd';
 import ContentLayout from './Components/ContentLayout';
+import GoodsList from './Pages/Goods/GoodsList';
 
 export default function AppRouter() {
     return (
@@ -32,7 +33,8 @@ export default function AppRouter() {
                     <Route path="not" element={<NoAllow />} />
                 </Route>
                 <Route path='goods' element={<ContentLayout />} >
-                    <Route path='list' element={<Goods />} />
+                    <Route path='edit' element={<GoodsAdd />} />
+                    <Route path='list' element={<GoodsList />} />
                 </Route>
             </Routes>
         </HistoryRouter>
