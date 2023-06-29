@@ -4,8 +4,9 @@ import { useForm } from 'antd/es/form/Form';
 import React, { useState } from 'react';
 import EditTableAll from '../../../Components/EditTableAll/EditTableAll';
 import './index.css';
-import { baseURL } from '../../../Config/request';
+import request, { baseURL } from '../../../Config/request';
 import { uploadUrl } from '../../../Requests/FileApi';
+import { addGoods } from '../../../Requests/GoodsApi';
 
 
 
@@ -129,11 +130,16 @@ export default function GoodsAdd() {
 
     const createGoods = async () => {
         await baseForm.validateFields();
-        let table = formTable.getFieldsValue()
-        if (!table || table.length == 0) {
+        await detailForm.validateFields()
 
-        }
-        console.log({ ...baseForm.getFieldsValue(), ...formTable.getFieldsValue() })
+        let detail = detailForm.getFieldsValue();
+        let table = formTable.getFieldsValue();
+        let { table: skuDetailInfo } = table
+        let { list1: skuInfo } = detail
+        let skuInfoResult = skuInfo.map((res) => { return { name: res.level1Input, values: res.level2List.map(res2 => res2.level2Input) } })
+
+        await request.postJson(addGoods, {}, { ...baseForm.getFieldsValue(), skuInfoResult, skuDetailInfo })
+
     }
 
     return (
@@ -148,7 +154,7 @@ export default function GoodsAdd() {
                     <Form.Item label="商品描述" name="description" rules={[{ required: true, message: "商品描述必传递" }]}>
                         <TextArea rows={4} />
                     </Form.Item>
-                    <Form.Item name="switch" label="是否上架" valuePropName="checked">
+                    <Form.Item name="onSelf" label="是否上架" valuePropName="checked">
                         <Switch />
                     </Form.Item>
                     <Form.Item label="商品图片"  >
@@ -169,7 +175,15 @@ export default function GoodsAdd() {
             <div style={{ marginTop: 20 }}></div>
             <Card>
                 <Form form={detailForm} onFinish={onSubmit} >
-                    <Form.List name={['list1']} >
+                    <Form.List name={['list1']} rules={[
+                        {
+                            validator: async (_, list1) => {
+                                if (!list1 || list1.length <= 0) {
+                                    return Promise.reject("至少有一个规格值")
+                                }
+                            }
+                        }
+                    ]}>
                         {(fields, { add, remove }, { errors }) => (
                             <>
                                 {fields.map((field, index) => {
@@ -202,6 +216,7 @@ export default function GoodsAdd() {
                                     <Button type="default" htmlType='submit'>生成</Button>
                                     {/* <span style={{ color: "red" }}>需要有规格！！</span> */}
                                 </Space>
+                                <Form.ErrorList errors={errors} />
                             </>
                         )}
                     </Form.List>

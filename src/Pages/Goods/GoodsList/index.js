@@ -1,27 +1,19 @@
-import { Image, Space, Switch, Table } from 'antd';
+import { Drawer, Image, Space, Switch, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import request from '../../../Config/request';
+import { getGoodsList } from '../../../Requests/GoodsApi';
 
 export default function GoodsList() {
 
     const [dataSource, setDataSource] = useState([])
     const [selectionType, setSelectionType] = useState('checkbox');
+    const [open, setOpen] = useState(false);
 
 
     useEffect(() => {
-        setDataSource([
-            {
-                key: 1,
-                goodsName: "商品一",
-                goodsDescription: "商品描述",
-                onSelf: true
-            },
-            {
-                key: 2,
-                goodsName: "xxx",
-                goodsDescription: "商品描述",
-                onSelf: false
-            },
-        ])
+        request.postJson(getGoodsList, { pageIndex: 1, pageSize: 10 }, {}).then(res => {
+            setDataSource(res.goodsDetailVOList)
+        })
     }, [])
 
     const columns = [
@@ -31,14 +23,14 @@ export default function GoodsList() {
             title: "商品",
             width: "20%",
             render: (text, record) => {
-                return <Space size="large"><Image width={100} height={80} src='http://localhost:8081/pic/20230425151844p07ue.jpeg'></Image>
+                return <Space size="large"><Image width={100} height={80} src={record.imgUrl}></Image>
                     <span style={{ color: "purple" }}>{text}</span>
                 </Space>
             }
         },
         {
             name: "goodsDescription",
-            dataIndex: "goodsDescription",
+            dataIndex: "description",
             title: "商品描述"
         },
         {
@@ -57,7 +49,7 @@ export default function GoodsList() {
             width: "20%",
             render: (text, record) => {
                 return <Space size="small">
-                    <a>编辑</a>
+                    <a onClick={() => setOpen(true)}>详情</a>
                     <a>删除</a>
                 </Space>
             }
@@ -80,6 +72,9 @@ export default function GoodsList() {
                 type: selectionType,
                 ...rowSelection,
             }} />
+            <Drawer title="Basic Drawer" placement="right"  onClose={() => setOpen(false)} open={open}>
+                <p>Some contents...</p>
+            </Drawer>
         </div>
     )
 }
